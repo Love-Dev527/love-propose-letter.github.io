@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Love Adventure 💖</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://i.pinimg.com/originals/70/79/20/707920ab5c7e6b9a8f5d28f6108b1bfb.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #d6336c;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    .page {
+      display: none;
+      padding: 40px 20px;
+    }
+    .active {
+      display: block;
+    }
+    .envelope {
+      font-size: 80px;
+      cursor: pointer;
+      margin: 80px auto;
+      transition: transform 0.3s ease;
+    }
+    .envelope:hover {
+      transform: scale(1.1);
+    }
+    .button {
+      padding: 12px 24px;
+      margin-top: 30px;
+      font-size: 16px;
+      background-color: #d6336c;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 80%;
+      max-width: 300px;
+    }
+    .memory-option {
+      margin: 20px 0;
+    }
+    .letter {
+      white-space: pre-wrap;
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: left;
+      font-size: 16px;
+    }
+    .gif {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 20px;
+      display: block;
+    }
+    #finalLoveMsg {
+      font-size: 24px;
+      margin-top: 30px;
+    }
+    .hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: -1;
+    }
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: pink;
+      animation: float 8s infinite ease-in;
+      clip-path: polygon(50% 0%, 100% 35%, 80% 100%, 50% 75%, 20% 100%, 0% 35%);
+    }
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) scale(0.5);
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-10vh) scale(1);
+        opacity: 0;
+      }
+    }
+    @media (max-width: 600px) {
+      .letter {
+        font-size: 14px;
+        padding: 15px;
+      }
+      .button {
+        font-size: 14px;
+        padding: 10px 20px;
+      }
+      input[type="text"] {
+        font-size: 14px;
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="hearts"></div>
+
+  <!-- Page 1: Envelope Puzzle -->
+  <div class="page active" id="page1">
+    <img class="gif" src="https://media.giphy.com/media/fHtb1JPbfph72/giphy.gif" alt="Heart GIF">
+    <h1>Hey My Love 💌</h1>
+    <p>Can you guess what my heart is saying?<br>(Unscramble the word)</p>
+    <div class="envelope" onclick="nextPage(2)">📩</div>
+  </div>
+
+  <!-- Page 2: Word Puzzle -->
+  <div class="page" id="page2">
+    <img class="gif" src="https://media.giphy.com/media/fHtb1JPbfph72/giphy.gif" alt="Heart GIF">
+    <h2>Say something to me 💕</h2>
+    <p>Say "I love you" here 💌</p>
+    <input type="text" id="sayLove" placeholder="Type here...">
+    <p id="sayLoveFeedback"></p>
+    <button class="button" onclick="checkLoveSentence()">Submit</button>
+  </div>
+
+  <!-- Page 3: First Date Memory -->
+  <div class="page" id="page3">
+    <img class="gif" src="https://media.giphy.com/media/l4FGJds6XzY5WzZrG/giphy.gif" alt="GIF">
+    <h2>Love Memory 💭</h2>
+    <p>Which place did we go on our first date?</p>
+    <div class="memory-option"><button class="button" onclick="nextPage(4)">A cozy cafe</button></div>
+    <div class="memory-option"><button class="button" onclick="nextPage(4)">A sunny beach</button></div>
+    <div class="memory-option"><button class="button" onclick="nextPage(4)">A quiet park</button></div>
+  </div>
+
+  <!-- Page 4: Online Date Memory -->
+  <div class="page" id="page4">
+    <img class="gif" src="https://media.giphy.com/media/13borq7Zo2kulO/giphy.gif" alt="GIF">
+    <h2>Our Cute Online Date 🖥️❤️</h2>
+    <p>Did we have an online movie night together?</p>
+    <button class="button" onclick="nextPage(5)">Yes, it was magical! ✨</button>
+  </div>
+
+  <!-- Page 5: Love Letter Typing -->
+  <div class="page" id="page5">
+    <img class="gif" src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" alt="GIF">
+    <h2>A Letter Just for You 💌</h2>
+    <div class="letter" id="typedLetter"></div>
+    <button class="button" id="continueBtn" style="display:none;" onclick="nextPage(6)">Please click me 💖</button>
+  </div>
+
+  <!-- Page 6: Final Infinite Love Message -->
+  <div class="page" id="page6">
+    <img class="gif" src="https://media.giphy.com/media/l4FGuhL4U2WyjdkaY/giphy.gif" alt="GIF">
+    <h2>And Finally... 💕</h2>
+    <p id="finalLoveMsg"></p>
+  </div>
+
+<script>
+  function nextPage(num) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page' + num).classList.add('active');
+    if (num === 5) {
+      typeLetter();
+    }
+    if (num === 6) {
+      startLoveCounter();
+    }
+  }
+
+  function checkLoveSentence() {
+    const input = document.getElementById('sayLove').value.trim().toLowerCase();
+    const feedback = document.getElementById('sayLoveFeedback');
+    if (input.includes("i love you")) {
+      feedback.textContent = 'That made my day! ❤️';
+      setTimeout(() => nextPage(3), 1500);
+    } else {
+      feedback.textContent = 'Say it with love, baby 🥺';
+    }
+  }
+
+  const letter = `My sweetest love,
+
+From the moment you entered my life, everything changed. Your smile lights up my world, and your voice calms every storm in my heart. You are my dream come true, my safe place, and my forever home.
+
+Every day with you feels like a fairytale, and I am so grateful for your love. I never believed in soulmates until I met you, and now I can’t imagine a life without you.
+
+You are everything I ever wished for and so much more. I love you more than words could ever say.
+
+Forever yours,
+Your love 💖`;
+
+  function typeLetter() {
+    let i = 0;
+    const letterDiv = document.getElementById('typedLetter');
+    const continueBtn = document.getElementById('continueBtn');
+    letterDiv.innerHTML = '';
+
+    const interval = setInterval(() => {
+      letterDiv.innerHTML += letter.charAt(i);
+      i++;
+      if (i >= letter.length) {
+        clearInterval(interval);
+        continueBtn.style.display = 'inline-block';
+      }
+    }, 10);
+  }
+
+  const finalMsgs = [
+    "I love you 10 times 💖",
+    "I love you 100 times 💘",
+    "I love you 1000 times 💝",
+    "I love you 100000 times 💓",
+    "I love you... infinite! ♾️💞"
+  ];
+
+  function startLoveCounter() {
+    const finalText = document.getElementById('finalLoveMsg');
+    let index = 0;
+    finalText.textContent = '';
+    const interval = setInterval(() => {
+      finalText.textContent = finalMsgs[index];
+      index++;
+      if (index >= finalMsgs.length) {
+        clearInterval(interval);
+      }
+    }, 1000);
+  }
+
+  // Heart animation
+  const heartsContainer = document.querySelector('.hearts');
+  for (let i = 0; i < 30; i++) {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left = Math.random() * 100 + '%';
+    heart.style.animationDuration = (5 + Math.random() * 5) + 's';
+    heart.style.background = ['#ff99cc', '#ff6699', '#ff3366'][Math.floor(Math.random() * 3)];
+    heartsContainer.appendChild(heart);
+  }
+</script>
+</body>
+</html>
